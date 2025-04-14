@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Visa Prediction and Issuance</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eef2f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2C3E50;
+            margin-top: 40px;
+            font-size: 28px;
+        }
+
+        form {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            margin-top: 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            font-size: 16px;
+            color: #2C3E50;
+        }
+    </style>
+</head>
+<body>
+    <h2>Visa Prediction Form</h2>
+
+    <form>
+        <label for="salutation">Salutation <span style="color: red;">*</span></label>
+        <select id="salutation" required>
+            <option value="">-- Select Salutation --</option>
+            <option value="Mr.">Mr.</option>
+            <option value="Ms.">Ms.</option>
+            <option value="Mrs.">Mrs.</option>
+            <option value="Dr.">Dr.</option>
+        </select>
+
+        <label for="firstName">First Name <span style="color: red;">*</span></label>
+        <input type="text" id="firstName" required>
+
+        <label for="lastName">Last Name <span style="color: red;">*</span></label>
+        <input type="text" id="lastName" required>
+
+        <label for="maritalStatus">Marital Status <span style="color: red;">*</span></label>
+        <select id="maritalStatus" required>
+            <option value="">-- Select Marital Status --</option>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+            <option value="Divorced">Divorced</option>
+            <option value="Widowed">Widowed</option>
+        </select>
+
+        <label for="email">Email <span style="color: red;">*</span></label>
+        <input type="email" id="email" required>
+
+        <label for="phoneNumber">Phone Number <span style="color: red;">*</span></label>
+        <input type="tel" id="phoneNumber" required>
+
+        <label for="address">Address <span style="color: red;">*</span></label>
+        <input type="text" id="address" required>
+
+        <label for="age">Age <span style="color: red;">*</span></label>
+        <input type="number" id="age" required>
+
+        <label for="income">Income <span style="color: red;">*</span></label>
+        <input type="number" id="income" required>
+
+        <label for="nationality">Nationality <span style="color: red;">*</span></label>
+        <select id="nationality" required>
+            <option value="">-- Select Nationality --</option>
+            <option value="India">India</option>
+            <option value="Philippines">Philippines</option>
+            <option value="United States">United States</option>
+            <option value="United Kingdom">United Kingdom</option>
+            <option value="Australia">Australia</option>
+            <option value="Germany">Germany</option>
+            <option value="France">France</option>
+            <option value="Japan">Japan</option>
+            <option value="Brazil">Brazil</option>
+            <option value="China">China</option>
+        </select>
+
+        <label for="travelHistory">Travel History (number of countries visited) <span style="color: red;">*</span></label>
+        <input type="number" id="travelHistory" required>
+
+        <label for="visaType">Visa Type <span style="color: red;">*</span></label>
+        <select id="visaType" required>
+            <option value="">-- Select Visa Type --</option>
+            <option value="Tourist">Tourist</option>
+            <option value="Student">Student</option>
+            <option value="Work">Work</option>
+            <option value="Business">Business</option>
+        </select>
+
+        <label for="passportNumber">Passport Number <span style="color: red;">*</span></label>
+        <input type="text" id="passportNumber" required>
+
+        <button type="button" onclick="handlePrediction(event)">Predict Visa Outcome</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        async function handlePrediction(event) {
+            event.preventDefault();
+
+            const salutation = document.getElementById('salutation').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const maritalStatus = document.getElementById('maritalStatus').value;
+            const email = document.getElementById('email').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const address = document.getElementById('address').value;
+            const age = parseInt(document.getElementById('age').value);
+            const income = parseFloat(document.getElementById('income').value);
+            const nationality = document.getElementById('nationality').value;
+            const travelHistory = parseInt(document.getElementById('travelHistory').value);
+            const visaType = document.getElementById('visaType').value;
+            const passportNumber = document.getElementById('passportNumber').value;
+
+            const nationalityMapping = {
+                "India": 0, "Philippines": 1, "United States": 2,
+                "United Kingdom": 3, "Australia": 4, "Germany": 5,
+                "France": 6, "Japan": 7, "Brazil": 8, "China": 9
+            };
+
+            const inputData = {
+                salutation,
+                first_name: firstName,
+                last_name: lastName,
+                marital_status: maritalStatus,
+                email,
+                phone_number: phoneNumber,
+                address,
+                age,
+                income,
+                nationality_code: nationalityMapping[nationality],
+                travel_history: travelHistory,
+                visaType,
+                passportNumber
+            };
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = "<p>Predicting...</p>";
+
+            try {
+                const predictRes = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(inputData)
+                });
+
+                const prediction = await predictRes.json();
+                resultDiv.innerHTML = `<p><strong>Prediction Result:</strong> ${prediction.prediction}</p>`;
+
+                if (prediction.prediction === 1) {
+                    const issueData = {
+                        ...inputData,
+                        name: `${firstName} ${lastName}`,
+                        passportID: "P-" + Math.floor(Math.random() * 100000000)
+                    };
+
+                    resultDiv.innerHTML += "<p>Prediction is Approved. Issuing Visa...</p>";
+
+                    const issueRes = await fetch('http://127.0.0.1:5000/issue_visa_simulate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(issueData)
+                    });
+
+                    const issueResult = await issueRes.json();
+                    resultDiv.innerHTML += `<p><strong>Status:</strong> ${issueResult.message}</p>`;
+
+                    if (issueResult.tx_hash) {
+                        resultDiv.innerHTML += `<p><strong>Transaction Hash:</strong> ${issueResult.tx_hash}</p>`;
+                    }
+                } else {
+                    resultDiv.innerHTML += "<p>Visa is Rejected. No Smart Contract Issued</p>";
+                }
+
+            } catch (err) {
+                console.error(err);
+                resultDiv.innerHTML = "<p>An error occurred while predicting!</p>";
+            }
+        }
+        async function handlePrediction(event) {
+            event.preventDefault();
+        
+            // Get all the form elements
+            const form = event.target.closest('form');
+            if (!form.checkValidity()) {
+                alert('Please fill in all required fields!');
+                return;
+            }
+        
+        }
+        
+    </script>
+</body>
+</html>

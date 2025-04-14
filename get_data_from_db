@@ -1,0 +1,43 @@
+import sqlite3
+import pandas as pd
+
+conn = sqlite3.connect('visa_data.db')
+df = pd.read_sql_query("SELECT * FROM visa_requests", conn)
+print(df)
+conn.close()
+
+
+conn = sqlite3.connect('visa_data.db')
+c = conn.cursor()
+c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+print(c.fetchall())  # This will show all tables
+conn.close()
+
+
+rows = c.fetchall()
+if not rows:
+    print("No data found in visa_requests table")
+
+
+import sqlite3
+
+conn = sqlite3.connect('visa_data.db')
+c = conn.cursor()
+
+# Add missing columns
+try:
+    c.execute("ALTER TABLE visa_requests ADD COLUMN salutation TEXT")
+except sqlite3.OperationalError:
+    print("Column 'salutation' already exists.")
+
+try:
+    c.execute("ALTER TABLE visa_requests ADD COLUMN first_name TEXT")
+    c.execute("ALTER TABLE visa_requests ADD COLUMN last_name TEXT")
+    c.execute("ALTER TABLE visa_requests ADD COLUMN address TEXT")
+    c.execute("ALTER TABLE visa_requests ADD COLUMN email TEXT")
+    c.execute("ALTER TABLE visa_requests ADD COLUMN phone_number TEXT")
+except sqlite3.OperationalError:
+    print("One or more columns already exist.")
+
+conn.commit()
+conn.close()

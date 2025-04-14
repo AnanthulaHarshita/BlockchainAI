@@ -1,0 +1,6 @@
+web3
+pandas
+scikit-learn
+pickle-mixin
+flask
+flask-cors
