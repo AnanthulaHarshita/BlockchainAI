@@ -6,14 +6,10 @@ from flask_cors import CORS
 from flask import render_template
 import sqlite3
 from datetime import datetime
-
 from web3 import Web3
 
-
-app = Flask(__name__)
-CORS(app)
 app = Flask(__name__, template_folder='../frontend')
-
+CORS(app)
 
 # Initialize database and table with new fields
 def init_db():
@@ -43,7 +39,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 init_db()
 
 # Load model
@@ -61,6 +56,7 @@ contract = w3.eth.contract(address=contract_address, abi=abi)
 @app.route('/')
 def home():
     return render_template('index.html')
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
@@ -123,19 +119,37 @@ def issue_visa_simulate():
                 "db_status": "Stored successfully"
             })
 
-        dummy_tx_hash = "0xcbcc2d77437bf48dd5bb8fd40eb987afbb368511f4d7190a0cc39b19b2decefb"
+        # Simulated transaction hash
+        dummy_tx_hash = "0xaa051b54d313f130513d436305339bd1255554e36156147cf41496a4130e1fef"
 
+        # Sample transaction details
+        transaction_data = {
+            "tx_hash": dummy_tx_hash,
+            "block_hash": "0x3b43a4a0139f04c6484b5934a8ebec6c8c5c9ee08b26fed16ea42dead246ac04",
+            "block_number": 14,
+            "contract_address": "0xcD6a42782d230D7c13A74ddec5dD140e55499Df9",
+            "logs": [
+                {
+                    "event": "VisaIssued",
+                    "name": "Adi",
+                    "passport_id": "888888",
+                    "visa_type": "Study"
+                }
+            ]
+        }
+
+        # Return the JSON response
         return jsonify({
             "status": "Visa issued (simulated)",
             "tx_hash": dummy_tx_hash,
             "message": "This transaction was manually executed on Remix.",
-            "db_status": "Stored successfully"
+            "db_status": "Stored successfully",
+            "transaction_data": transaction_data  # Include transaction data in the response
         })
 
     except Exception as e:
         print(f"Error during visa issue or storing data: {e}")
         return jsonify({'error': 'Failed during visa issue simulation or data storage'}), 500
-
 
 @app.route('/get_all_visas', methods=['GET'])
 def get_all_visas():
@@ -186,9 +200,6 @@ def get_all_visas():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
 
 
 
