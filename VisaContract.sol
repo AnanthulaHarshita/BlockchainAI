@@ -13,6 +13,12 @@ contract VisaContract {
 
     event VisaIssued(string name, string passportID, string visaType);
 
+    constructor() {
+        // Hardcoded Visa entry on deployment
+        visas.push(Visa("Adi", "888888", "Study", block.timestamp));
+        emit VisaIssued("Adi", "888888", "Study");
+    }
+
     function issueVisa(string memory name, string memory passportID, string memory visaType) public {
         visas.push(Visa(name, passportID, visaType, block.timestamp));
         emit VisaIssued(name, passportID, visaType);
